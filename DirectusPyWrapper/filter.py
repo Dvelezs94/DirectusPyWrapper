@@ -1,6 +1,7 @@
 from DirectusPyWrapper.filter_base import FilterBase
 from DirectusPyWrapper.logical_operators import LogicalOperators
 from DirectusPyWrapper.operators import Operators
+import json_fix
 
 
 class Filter(FilterBase):
@@ -33,6 +34,3 @@ class Filter(FilterBase):
             params = params[self.logical_operator][0]
 
         return params
-
-    def to_dict(self):
-        return self.__json__(self)
