@@ -116,7 +116,7 @@ class DirectusRequest:
         method = "get" if id is not None else method
         json_params=json.loads(json.dumps({"query": self.params}))
         if method == "search":
-            response = self.directus.session.request("search", self.uri, json={"query": json_params},
+            response = self.directus.session.request("search", self.uri, json=json_params,
                                                      auth=self.directus.auth)
         elif method == "get":
             url = f'{self.uri}/{id}' if id is not None else self.uri
