@@ -112,36 +112,18 @@ class DirectusRequest:
     #         raise ValueError(f"Method '{method}' not supported")
     #     return DirectusResponse(response, self.params)
 
-    def read_2(self, id: Optional[int | str] = None, method="search") -> DirectusResponse:
-        method = "get" if id is not None else method
-        if method == "search":
-            json_params=json.loads(json.dumps({"query": self.params}))
-            print(json_params)
-            print(self.uri)
-            try:
-                response = self.directus.session.request("search", self.uri, json=json_params,
-                                                    auth=self.directus.auth)
-            except Exception as e:
-                raise Exception(f"Error!! {e}")
-        elif method == "get":
-            url = f'{self.uri}/{id}' if id is not None else self.uri
-            response = self.directus.session.get(url, params=self.params, auth=self.directus.auth)
-        else:
-            raise ValueError(f"Method '{method}' not supported")
-        return DirectusResponse(response, query=self.params, collection=self.collection_class)
-        
-
     def read(self, id: Optional[int | str] = None, method="search") -> DirectusResponse:
         method = "get" if id is not None else method
+        json_params=json.loads(json.dumps({"query": self.params}))
         if method == "search":
-            response = self.directus.session.request("search", self.uri, json={"query": self.params},
+            response = self.directus.session.request("search", self.uri, json={"query": json_params},
                                                      auth=self.directus.auth)
         elif method == "get":
             url = f'{self.uri}/{id}' if id is not None else self.uri
-            response = self.directus.session.get(url, params=self.params, auth=self.directus.auth)
+            response = self.directus.session.get(url, params=json_params, auth=self.directus.auth)
         else:
             raise ValueError(f"Method '{method}' not supported")
-        return DirectusResponse(response, query=self.params, collection=self.collection_class)
+        return DirectusResponse(response, query=json_params, collection=self.collection_class)
 
     def create_one(self, item: dict) -> DirectusResponse:
         response = self.directus.session.post(self.uri, json=item, auth=self.directus.auth)
