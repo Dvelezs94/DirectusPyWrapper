@@ -114,8 +114,11 @@ class DirectusRequest:
     def read_2(self, id: Optional[int | str] = None, method="search") -> DirectusResponse:
         method = "get" if id is not None else method
         if method == "search":
+            json_params={"query": self.params}
+            print(json_params)
+            print(self.uri)
             try:
-                response = self.directus.session.request("search", self.uri, json={"query": self.params},
+                response = self.directus.session.request("search", self.uri, json=json_params,
                                                     auth=self.directus.auth)
             except Exception as e:
                 raise Exception(f"Error!! {e}")
