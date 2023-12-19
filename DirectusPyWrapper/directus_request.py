@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Optional
 
 import json_fix
+import json
 
 from DirectusPyWrapper._and import _and
 from DirectusPyWrapper.aggregation_operators import AggregationOperators
@@ -114,7 +115,7 @@ class DirectusRequest:
     def read_2(self, id: Optional[int | str] = None, method="search") -> DirectusResponse:
         method = "get" if id is not None else method
         if method == "search":
-            json_params={"query": self.params}
+            json_params=json.loads(json.dumps({"query": self.params}))
             print(json_params)
             print(self.uri)
             try:
