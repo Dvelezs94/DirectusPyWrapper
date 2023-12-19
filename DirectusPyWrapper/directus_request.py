@@ -113,18 +113,19 @@ class DirectusRequest:
 
     def read_2(self, id: Optional[int | str] = None, method="search") -> DirectusResponse:
         method = "get" if id is not None else method
-        try:
-            if method == "search":
+        if method == "search":
+            try:
                 response = self.directus.session.request("search", self.uri, json={"query": self.params},
-                                                        auth=self.directus.auth)
-            elif method == "get":
-                url = f'{self.uri}/{id}' if id is not None else self.uri
-                response = self.directus.session.get(url, params=self.params, auth=self.directus.auth)
-            else:
-                raise ValueError(f"Method '{method}' not supported")
-            return DirectusResponse(response, query=self.params, collection=self.collection_class)
-        except Exception as e:
-            raise Exception(f"Error!! {e}")
+                                                    auth=self.directus.auth)
+            except Exception as e:
+                raise Exception(f"Error!! {e}")
+        elif method == "get":
+            url = f'{self.uri}/{id}' if id is not None else self.uri
+            response = self.directus.session.get(url, params=self.params, auth=self.directus.auth)
+        else:
+            raise ValueError(f"Method '{method}' not supported")
+        return DirectusResponse(response, query=self.params, collection=self.collection_class)
+        
 
     def read(self, id: Optional[int | str] = None, method="search") -> DirectusResponse:
         method = "get" if id is not None else method
